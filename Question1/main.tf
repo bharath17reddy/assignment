@@ -80,8 +80,8 @@ resource "aws_instance" "server" {
 
   connection {
     type        = "ssh"
-    user        = "ubuntu"  # Replace with the appropriate username for your EC2 instance
-    private_key = file("~/.ssh/id_rsa")  # Replace with the path to your private key
+    user        = "ubuntu"   
+    private_key = file("~/.ssh/id_rsa")   
     host        = self.public_ip
   }
 
