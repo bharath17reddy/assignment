@@ -1,0 +1,37 @@
+# tomcat_restart.yml
+
+---
+- name: Restart Tomcat Application
+  hosts: all
+  become: yes
+  tasks:
+    - name: Tomcat service running
+      shell: systemctl status tomcat
+      register: tomcat_status
+      ignore_errors: true
+
+    - name: Running process
+      shell: ps aux --sort -%mem | head -n 11
+      register: top_processes
+
+    - name: Print top 10 running processes output
+      debug:
+        var: top_processes.stdout_lines
+
+    - name: Restart Tomcat if new WAR file
+      shell: >
+        diff /path/to/old/war /path/to/new/war     // check the difference in old and new warfiles
+      register: war_diff
+      ignore_errors: true
+
+    - name: Check if WAR file is changed
+      debug:
+        msg: "WAR file changed. Restarting Tomcat."
+      when: war_diff.rc == 1
+
+    - name: Restart Tomcat service
+      service:
+        name: tomcat
+        state: restarted
+      when: war_diff.rc == 1 or tomcat_service_status.rc != 0
+
