@@ -15,7 +15,7 @@ resource "aws_lb_target_group" "example" {
   port        = 80
   protocol    = "HTTP"
   target_type = "instance"
-  vpc_id      = "your_vpc_id" # Specify your VPC ID
+  vpc_id      = "vpc-02af0191100015353"
 }
 
 resource "aws_lb_listener" "example" {
@@ -31,13 +31,13 @@ resource "aws_lb_listener" "example" {
 
 resource "aws_lb_target_group_attachment" "example" {
   target_group_arn = aws_lb_target_group.example.arn
-  target_id        = "your_ec2_instance_id" # Specify your EC2 instance ID
+  target_id        = "i-0a4d2d81da8d9f684"
 }
 
 resource "aws_security_group" "alb_sg" {
   name        = "alb-sg"
   description = "Security group for ALB"
-  vpc_id      = "your_vpc_id" # Specify your VPC ID
+  vpc_id      ="vpc-02af0191100015353"
 
   // Add ingress rules for allowing traffic
   ingress {
