@@ -1,21 +1,88 @@
+ 
 ---
-  - name: Installation of Packages
-  - hosts: all
-    become: yes
-    tasks:
-      - name: Install required packages
-        package:
-          name: "{{ item }}"
-          state: present
-        with_items:
-          - mysql-server
-          - tomcat
-          - memcached
-          - redis
+ - name: Install and configure MySQL, Tomcat, Memcached, Redis, and deploy sample WAR file
+  hosts: all
+  become: yes
+  vars:
+    war_file_name: sample.war
+    tomcat_version: 9
+    mysql_root_password: 1234
+    mysql_user: mysql_bharath
+    mysql_password: 12345
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      when: ansible_pkg_mgr == 'apt'
 
-      - name: Deploy sample WAR file
-        copy:
-          src: /home/ansadmin/sample.war
-          dest: /home/ansadmin/tomcat/webapps/sample.war
-          remote_src: yes 
+    - name: Install required packages
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - mysql-server
+        - tomcat{{ tomcat_version }}
+        - memcached
+        - redis-server
+        - default-jdk
+      
 
+    - name: Start mysql
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+
+    - name: MySQL Installation
+      mysql_user:
+        name: root
+        password: "{{ mysql_root_password }}"
+        host: localhost
+        login_unix_socket: yes
+        check_implicit_admin: yes
+        login_user: root
+        login_password: ""
+
+    - name: Create MySQL user and database
+      mysql_db:
+        name: mysql_db
+        state: present
+      mysql_user:
+        name: "{{ mysql_user }}"
+        password: "{{ mysql_password }}"
+        priv: "mysql_db.*:ALL"
+        state: present
+
+    - name: Start and enable Tomcat service
+      service:
+        name: tomcat{{ tomcat_version }}
+        state: started
+        enabled: yes
+
+    - name: Deploy WAR file to Tomcat
+      copy:
+        src: "/home/{{ war_file_name }}"
+        dest: "/var/lib/tomcat{{ tomcat_version }}/webapps/{{ war_file_name }}"
+        remote_src: yes
+        owner: tomcat{{ tomcat_version }}
+        group: tomcat{{ tomcat_version }}
+        mode: 0644
+
+    - name: Restart Tomcat service
+      service:
+        name: tomcat{{ tomcat_version }}
+        state: restarted
+
+    - name: Start and enable Memcached service
+      service:
+        name: memcached
+        state: started
+        enabled: yes
+
+    - name: Start and enable Redis service
+      service:
+        name: redis
+        state: started
+        enabled: yes
+
+     
