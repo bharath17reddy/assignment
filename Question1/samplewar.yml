@@ -1,11 +1,11 @@
  
 ---
-  - name: Restart Tomcat Application
+  - name: Sample war file
   - hosts: all
     become: yes
     tasks:
       - name: Deploy sample WAR file
         copy:
-          src: /path/to/your/sample.war
-          dest: /path/to/tomcat/webapps/sample.war
+          src: /home/ansadmin/sample.war
+          dest: /home/ansadmin/tomcat/webapps/sample.war
           remote_src: yes
