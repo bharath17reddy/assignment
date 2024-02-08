@@ -1,8 +1,4 @@
-variable "Region" {
-  description = "AWS region where the instance will be deployed"
-}
-
-variable "KeyName" {
+ variable "KeyName" {
   description = "Name of the SSH key to be installed on the instance"
 }
 
