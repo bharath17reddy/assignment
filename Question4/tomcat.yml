@@ -1,13 +1,36 @@
-
----
+ ---
   - name: Restart Tomcat Application
     hosts: all
     become: yes
+    vars:
+      tomcat_webapps_dir: "/home/tomcat/webapps"
+      war_file_path: "/home/application.war"
     tasks:
       - name: Tomcat service running
         shell: service tomcat status
         register: tomcat_status
         ignore_errors: true
+       - name: Check if the WAR file has changed
+      stat:
+        path: "{{ war_file_path }}"
+      register: war_file_info
+
+    - name: Remove old deployment if the WAR file has changed
+      file:
+        path: "{{ tomcat_webapps_dir }}/your_application"
+        state: absent
+      when: war_file_info.stat.exists
+
+    - name: Deploy the new WAR file
+      copy:
+        src: "{{ war_file_path }}"
+        dest: "{{ tomcat_webapps_dir }}/your_application.war"
+      when: war_file_info.stat.exists
+
+    - name: Restart Tomcat
+      systemd:
+        name: tomcat
+        state: restarted  
 
       - name: Running process
         shell: ps aux --sort -%mem | head -n 11
@@ -17,20 +40,5 @@
         debug:
           var: top_processes.stdout_lines
 
-      - name: Restart Tomcat if new WAR file
-        shell: >
-          diff /path/to/old/war /path/to/new/war     // check the difference in old and new warfiles
-        register: war_diff
-        ignore_errors: true
-
-      - name: Check if WAR file is changed
-        debug:
-          msg: "WAR file changed. Restarting Tomcat."
-        when: war_diff.rc == 1
-
-      - name: Restart Tomcat service
-        service:
-          name: tomcat
-          state: restarted
-        when: war_diff.rc == 1 or tomcat_service_status.rc != 0
+       
 
