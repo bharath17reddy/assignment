@@ -7,7 +7,7 @@ resource "aws_lb" "example" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = ["subnet_id_1", "subnet_id_2"] # Specify your subnet IDs
+  subnets            = ["subnet-075274f7c67b1e7c1", "subnet-0f49b1e6b608491bc"] 
 }
 
 resource "aws_lb_target_group" "example" {
@@ -38,15 +38,32 @@ resource "aws_security_group" "alb_sg" {
   name        = "alb-sg"
   description = "Security group for ALB"
   vpc_id      ="vpc-02af0191100015353"
-
-  // Add ingress rules for allowing traffic
+  
   ingress {
+    description = "HTTP from VPC"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-  // Add other rules as needed
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "Web-sg"
+  }
 }
 
+ 
