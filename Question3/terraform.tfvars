@@ -1,4 +1,4 @@
-KeyName     = "your_ssh_key_name"
-InstanceType = "t2.micro"  # or any instance type you want to use
-SubnetId    = "your_subnet_id"
-VpcId       = "your_vpc_id"
+ 
+InstanceType = "t2.micro"   
+SubnetId    = "subnet-075274f7c67b1e7c1"
+VpcId       = "vpc-02af0191100015353"
