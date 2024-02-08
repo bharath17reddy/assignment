@@ -1,5 +1,4 @@
-# tomcat_restart.yml
-
+ 
 ---
 - name: Restart Tomcat Application
   hosts: all
