@@ -1,5 +1,5 @@
 ---
-  - name: Installation of Application
+  - name: Installation of Packages
   - hosts: all
     become: yes
     tasks:
