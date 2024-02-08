@@ -6,7 +6,7 @@
   become: yes
   tasks:
     - name: Tomcat service running
-      shell: systemctl status tomcat
+      shell: service tomcat status
       register: tomcat_status
       ignore_errors: true
 
