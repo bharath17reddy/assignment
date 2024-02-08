@@ -1,6 +1,5 @@
 ---
-  - name :Playbook
-
+- name: Restart Tomcat Application
 - hosts: all
   become: yes
   tasks:
@@ -14,5 +13,5 @@
         - memcached
         - redis
 
-    # Add tasks for configuring MySQL, Tomcat, Memcached, Redis, etc.
+    
 
