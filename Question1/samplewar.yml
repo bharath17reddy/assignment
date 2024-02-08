@@ -1,7 +1,0 @@
- 
----
-  - name: Sample war file
-  - hosts: all
-    become: yes
-    tasks:
-      
