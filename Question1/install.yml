@@ -13,5 +13,9 @@
           - memcached
           - redis
 
-    
+      - name: Deploy sample WAR file
+        copy:
+          src: /home/ansadmin/sample.war
+          dest: /home/ansadmin/tomcat/webapps/sample.war
+          remote_src: yes 
 
