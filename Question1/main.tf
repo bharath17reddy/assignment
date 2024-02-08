@@ -85,20 +85,4 @@ resource "aws_instance" "server" {
     host        = self.public_ip
   }
 
-  # File provisioner to copy a file from local to the remote EC2 instance
-  provisioner "file" {
-    source      = "app.py"  # Replace with the path to your local file
-    destination = "/home/ubuntu/app.py"  # Replace with the path on the remote instance
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'Hello from the remote instance'",
-      "sudo apt update -y",  # Update package lists (for ubuntu)
-      "sudo apt-get install -y python3-pip",  # Example package installation
-      "cd /home/ubuntu",
-      "sudo pip3 install flask",
-      "sudo nohup python3 app.py &",       ///nohup command runs even we exit from terminal and "&" indicates BACKGROUND Process///
-    ]
-  }
-}
+ 
