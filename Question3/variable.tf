@@ -1,8 +1,4 @@
- variable "KeyName" {
-  description = "Name of the SSH key to be installed on the instance"
-}
-
-variable "InstanceType" {
+ variable "InstanceType" {
   description = "EC2 instance type"
 }
 
